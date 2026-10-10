@@ -87,8 +87,22 @@ python3 tools/build_zip.py              # builds dist/weather.environmentcanada-
 ```
 
 `weather.environmentcanada/lib/eccc.py` turns ECCC/Open-Meteo data into Kodi properties and has no Kodi
-imports. `lib/addon.py` is the Kodi side. Pushing a tag `v<version>` that matches `addon.xml` makes
-GitHub Actions run the tests and attach the zip to a GitHub release.
+imports. `lib/addon.py` is the Kodi side.
+
+### Releasing
+
+The version lives in one place: the `version` attribute of `<addon>` in
+`weather.environmentcanada/addon.xml`. Kodi compares it to decide whether an installed copy needs
+updating, and `tools/build_zip.py` puts it in the zip's file name.
+
+1. In `addon.xml`, raise `version` (e.g. `1.1.0` → `1.2.0`) and replace the `<news>` text with what
+   changed.
+2. Commit, then tag and push the tag with the same version and a `v` prefix:
+   ```sh
+   git tag v1.2.0 && git push origin main v1.2.0
+   ```
+3. GitHub Actions runs the tests, checks that the tag matches `addon.xml`, builds the zip and publishes a
+   GitHub release with it attached. A tag that doesn't match fails before anything is published.
 
 ## Credits and licences
 

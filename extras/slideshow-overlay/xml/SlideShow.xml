@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Estuary 3.0.10 (Kodi 20) SlideShow.xml plus a weather panel from kodi-weather-eccc.
+     Derived from Estuary by phil65 (Team Kodi); GPL-2.0, see ../LICENSE. Coordinates are 1920x1080.
+     The panel reads the weather.environmentcanada add-on's window properties. -->
+<window>
+	<controls>
+		<include condition="Skin.HasSetting(touchmode)">TouchBackSlideshowButton</include>
+		<control type="image">
+			<centerleft>50%</centerleft>
+			<centertop>50%</centertop>
+			<width>256</width>
+			<height>256</height>
+			<texture>icons/settings/player.png</texture>
+			<visible>SlideShow.IsVideo</visible>
+			<visible>![Player.Playing + Player.HasVideo] | SlideShow.IsPaused</visible>
+		</control>
+		<control type="group">
+			<left>1050</left>
+			<top>30</top>
+			<width>840</width>
+			<height>350</height>
+			<visible>Weather.IsFetched + !SlideShow.IsVideo</visible>
+			<control type="image">
+				<left>0</left>
+				<top>0</top>
+				<width>840</width>
+				<height>295</height>
+				<texture border="40" colordiffuse="B3000000">kodi-weather-panel.png</texture>
+				<visible>String.IsEmpty(Window(weather).Property(Alerts))</visible>
+			</control>
+			<control type="image">
+				<left>0</left>
+				<top>0</top>
+				<width>840</width>
+				<height>345</height>
+				<texture border="40" colordiffuse="B3000000">kodi-weather-panel.png</texture>
+				<visible>!String.IsEmpty(Window(weather).Property(Alerts))</visible>
+			</control>
+			<!-- now: icon + temperature -->
+			<control type="image">
+				<left>15</left>
+				<top>10</top>
+				<width>150</width>
+				<height>150</height>
+				<aspectratio>keep</aspectratio>
+				<texture>resource://resource.images.weathericons.default/$INFO[Window(weather).Property(Current.OutlookIcon)]</texture>
+			</control>
+			<control type="label">
+				<left>170</left>
+				<top>10</top>
+				<width>400</width>
+				<height>150</height>
+				<aligny>center</aligny>
+				<font>WeatherTemp</font>
+				<textcolor>white</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<label>$INFO[Window(weather).Property(Current.TemperatureLabel)]</label>
+			</control>
+			<!-- next hours: +1h, +4h, +8h -->
+			<control type="image">
+				<left>570</left>
+				<top>18</top>
+				<width>44</width>
+				<height>44</height>
+				<aspectratio>keep</aspectratio>
+				<texture>resource://resource.images.weathericons.default/$INFO[Window(weather).Property(Hourly.1.OutlookIcon)]</texture>
+			</control>
+			<control type="label">
+				<left>622</left>
+				<top>15</top>
+				<width>120</width>
+				<height>50</height>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>FFDDDDDD</textcolor>
+				<label>$INFO[Window(weather).Property(Hourly.1.Time)]</label>
+			</control>
+			<control type="label">
+				<left>740</left>
+				<top>15</top>
+				<width>90</width>
+				<height>50</height>
+				<align>right</align>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>white</textcolor>
+				<label>$INFO[Window(weather).Property(Hourly.1.Temperature)]</label>
+			</control>
+			<control type="image">
+				<left>570</left>
+				<top>68</top>
+				<width>44</width>
+				<height>44</height>
+				<aspectratio>keep</aspectratio>
+				<texture>resource://resource.images.weathericons.default/$INFO[Window(weather).Property(Hourly.4.OutlookIcon)]</texture>
+			</control>
+			<control type="label">
+				<left>622</left>
+				<top>65</top>
+				<width>120</width>
+				<height>50</height>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>FFDDDDDD</textcolor>
+				<label>$INFO[Window(weather).Property(Hourly.4.Time)]</label>
+			</control>
+			<control type="label">
+				<left>740</left>
+				<top>65</top>
+				<width>90</width>
+				<height>50</height>
+				<align>right</align>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>white</textcolor>
+				<label>$INFO[Window(weather).Property(Hourly.4.Temperature)]</label>
+			</control>
+			<control type="image">
+				<left>570</left>
+				<top>118</top>
+				<width>44</width>
+				<height>44</height>
+				<aspectratio>keep</aspectratio>
+				<texture>resource://resource.images.weathericons.default/$INFO[Window(weather).Property(Hourly.8.OutlookIcon)]</texture>
+			</control>
+			<control type="label">
+				<left>622</left>
+				<top>115</top>
+				<width>120</width>
+				<height>50</height>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>FFDDDDDD</textcolor>
+				<label>$INFO[Window(weather).Property(Hourly.8.Time)]</label>
+			</control>
+			<control type="label">
+				<left>740</left>
+				<top>115</top>
+				<width>90</width>
+				<height>50</height>
+				<align>right</align>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>white</textcolor>
+				<label>$INFO[Window(weather).Property(Hourly.8.Temperature)]</label>
+			</control>
+			<!-- condition, today's range, chance of precipitation -->
+			<control type="label">
+				<left>20</left>
+				<top>170</top>
+				<width>800</width>
+				<height>60</height>
+				<aligny>center</aligny>
+				<font>font37</font>
+				<textcolor>white</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<label>$INFO[Window(weather).Property(Current.Condition)]$INFO[Window(weather).Property(Current.FeelsLike), · Feels ,°]</label>
+			</control>
+			<control type="label">
+				<left>20</left>
+				<top>230</top>
+				<width>800</width>
+				<height>55</height>
+				<aligny>center</aligny>
+				<font>font30_title</font>
+				<textcolor>white</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<label>$INFO[Window(weather).Property(Day0.HighTemp),High ,°]$INFO[Window(weather).Property(Day0.LowTemp),  Low ,°]$INFO[Window(weather).Property(Daily.1.Precipitation),  Rain ,]</label>
+			</control>
+			<!-- which location the readings are for (the add-on's selected location) -->
+			<control type="label">
+				<left>500</left>
+				<top>230</top>
+				<width>320</width>
+				<height>55</height>
+				<align>right</align>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>FFBBBBBB</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<label>$INFO[Window(weather).Property(Location)]</label>
+			</control>
+			<control type="label">
+				<left>20</left>
+				<top>285</top>
+				<width>800</width>
+				<height>50</height>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>FFFFB020</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<label>$INFO[Window(weather).Property(Alerts)]</label>
+				<visible>!String.IsEmpty(Window(weather).Property(Alerts))</visible>
+			</control>
+		</control>
+	</controls>
+</window>

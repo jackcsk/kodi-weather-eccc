@@ -1,0 +1,36 @@
+# Kodi Media Center language file
+# Addon Name: Environment Canada
+# Addon id: weather.environmentcanada
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_GB\n"
+
+msgctxt "#32001"
+msgid "Locations"
+msgstr ""
+
+msgctxt "#32011"
+msgid "Location 1"
+msgstr ""
+
+msgctxt "#32012"
+msgid "Location 2"
+msgstr ""
+
+msgctxt "#32013"
+msgid "Location 3"
+msgstr ""
+
+msgctxt "#32020"
+msgid "Select place"
+msgstr ""
+
+msgctxt "#32021"
+msgid "Select Environment Canada forecast area"
+msgstr ""
+
+msgctxt "#32022"
+msgid "Could not reach the weather service. Check the network and try again."
+msgstr ""

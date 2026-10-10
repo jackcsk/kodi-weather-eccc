@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="weather.environmentcanada" name="Environment Canada" version="1.1.0" provider-name="Jack Cheung">
+	<requires>
+		<import addon="xbmc.python" version="3.0.0"/>
+	</requires>
+	<extension point="xbmc.python.weather" library="default.py"/>
+	<extension point="xbmc.service" library="service.py"/>
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en_GB">Canadian weather from Environment and Climate Change Canada</summary>
+		<description lang="en_GB">Hourly and 7-day forecasts, alerts and sunrise/sunset for Canadian cities from Environment and Climate Change Canada (api.weather.gc.ca), with current conditions for the exact location from Open-Meteo. No API key required. Refreshes every 15 minutes.</description>
+		<disclaimer lang="en_GB">Contains information licensed under the Open Government Licence - Canada. Current conditions and location search: Open-Meteo.com, CC BY 4.0. Not affiliated with or endorsed by Environment and Climate Change Canada.</disclaimer>
+		<platform>all</platform>
+		<license>MIT</license>
+		<source>https://github.com/jackcsk/kodi-weather-eccc</source>
+		<website>https://github.com/jackcsk/kodi-weather-eccc</website>
+		<news>v1.1.0: current conditions from Open-Meteo for the exact location, 15-minute refresh, one-decimal temperature and alert properties for skins.</news>
+	</extension>
+</addon>

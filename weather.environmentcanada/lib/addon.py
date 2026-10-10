@@ -1,4 +1,6 @@
-"""Kodi glue shared by the weather entry point (default.py) and the refresh service."""
+"""Kodi glue shared by the weather entry point (default.py) and the refresh service (service.py)."""
+import json
+
 import xbmc
 import xbmcaddon
 import xbmcgui
@@ -13,6 +15,7 @@ WEATHER_WINDOW = xbmcgui.Window(12600)
 MAX_LOCATIONS = 3
 FETCH_ATTEMPTS = 3
 RETRY_SECONDS = 10
+SERVICE_INTERVAL_SECONDS = 15 * 60
 
 STR_SEARCH_HEADING = 14024   # Kodi: "Select location"
 STR_NO_RESULTS = 284         # Kodi: "No results found"
@@ -54,6 +57,27 @@ def configured_location(index):
 def publish(props):
     for key, value in props.items():
         WEATHER_WINDOW.setProperty(key, value)
+
+
+def kodi_setting(name):
+    request = {'jsonrpc': '2.0', 'id': 1, 'method': 'Settings.GetSettingValue', 'params': {'setting': name}}
+    return json.loads(xbmc.executeJSONRPC(json.dumps(request))).get('result', {}).get('value')
+
+
+def run_refresh_service():
+    """Refresh the weather window properties every 15 minutes while this add-on is Kodi's provider.
+
+    Kodi's own weather refresh runs every 30 minutes and is not configurable, while the current
+    conditions this add-on uses update every 15. The Weather.Refresh built-in can't help: it only
+    reaches Kodi when the Weather window has been opened since start-up. So the service fetches and
+    publishes the window properties itself. Skins reading Window(weather).Property(...) see every
+    update; Kodi's own Weather.* labels still follow Kodi's 30-minute cycle.
+    """
+    log('service: refreshing weather every %d minutes' % (SERVICE_INTERVAL_SECONDS // 60))
+    monitor = xbmc.Monitor()
+    while not monitor.waitForAbort(SERVICE_INTERVAL_SECONDS):
+        if kodi_setting('weather.addon') == ADDON_ID:
+            refresh(str(kodi_setting('weather.currentlocation') or 1))
 
 
 def refresh(index):

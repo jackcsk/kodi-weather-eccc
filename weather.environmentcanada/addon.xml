@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="weather.environmentcanada" name="Environment Canada" version="1.1.0" provider-name="Jack Cheung">
+<addon id="weather.environmentcanada" name="Environment Canada" version="1.1.1" provider-name="Jack Cheung">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 	</requires>
@@ -13,6 +13,10 @@
 		<license>MIT</license>
 		<source>https://github.com/jackcsk/kodi-weather-eccc</source>
 		<website>https://github.com/jackcsk/kodi-weather-eccc</website>
-		<news>v1.1.0: current conditions from Open-Meteo for the exact location, 15-minute refresh, one-decimal temperature and alert properties for skins.</news>
+		<news>v1.1.1: add-on icon and fanart.</news>
+		<assets>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
+		</assets>
 	</extension>
 </addon>

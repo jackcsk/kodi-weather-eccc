@@ -84,10 +84,11 @@ Kodi's 30-minute cycle.
 ```sh
 python3 -m unittest discover tests      # tests run without Kodi
 python3 tools/build_zip.py              # builds dist/weather.environmentcanada-<version>.zip
+uvx kodi-addon-checker --branch matrix weather.environmentcanada   # Team Kodi's add-on linter
 ```
 
 `weather.environmentcanada/lib/eccc.py` turns ECCC/Open-Meteo data into Kodi properties and has no Kodi
-imports. `lib/addon.py` is the Kodi side.
+imports. `lib/addon.py` is the Kodi side. CI runs the tests and Team Kodi's add-on checker on every push.
 
 ### Releasing
 
@@ -101,8 +102,8 @@ updating, and `tools/build_zip.py` puts it in the zip's file name.
    ```sh
    git tag v1.2.0 && git push origin main v1.2.0
    ```
-3. GitHub Actions runs the tests, checks that the tag matches `addon.xml`, builds the zip and publishes a
-   GitHub release with it attached. A tag that doesn't match fails before anything is published.
+3. GitHub Actions runs the tests and the add-on checker, checks that the tag matches `addon.xml`, builds
+   the zip and publishes a GitHub release with it attached. If any check fails, nothing is published.
 
 ## Credits and licences
 

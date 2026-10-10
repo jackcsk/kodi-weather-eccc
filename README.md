@@ -27,10 +27,13 @@ Works with any skin that shows weather, Estuary included.
 
 ## Install
 
-1. Download `weather.environmentcanada-<version>.zip` from the
-   [Releases page](https://github.com/jackcsk/kodi-weather-eccc/releases).
+1. Get the add-on zip, `weather.environmentcanada-<version>.zip`, either way:
+   - download it from the [Releases page](https://github.com/jackcsk/kodi-weather-eccc/releases), or
+   - build it from this repository: `python3 tools/build_zip.py` writes it to `dist/`.
+
+   GitHub's automatic "Source code (zip)" download is not installable in Kodi.
 2. In Kodi, allow zip installs once: **Settings → System → Add-ons → Unknown sources → On**.
-3. **Settings → Add-ons → Install from zip file**, then pick the downloaded zip.
+3. **Settings → Add-ons → Install from zip file**, then pick the zip.
 
 ## Choose your city
 

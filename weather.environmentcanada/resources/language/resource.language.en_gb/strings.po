@@ -34,3 +34,7 @@ msgstr ""
 msgctxt "#32022"
 msgid "Could not reach the weather service. Check the network and try again."
 msgstr ""
+
+msgctxt "#32023"
+msgid "Weather unavailable since %s"
+msgstr ""

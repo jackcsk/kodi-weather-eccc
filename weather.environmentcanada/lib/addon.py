@@ -1,5 +1,6 @@
 """Kodi glue shared by the weather entry point (default.py) and the refresh service (service.py)."""
 import json
+from datetime import datetime, timezone
 
 import xbmc
 import xbmcaddon
@@ -22,6 +23,9 @@ STR_NO_RESULTS = 284         # Kodi: "No results found"
 STR_SELECT_PLACE = 32020
 STR_SELECT_AREA = 32021
 STR_NETWORK_ERROR = 32022
+STR_UNAVAILABLE = 32023      # "Weather unavailable since %s"
+# Kodi caches an add-on's strings until it restarts, so right after an update a new id reads as ''.
+UNAVAILABLE_FALLBACK = 'Weather unavailable since %s'
 
 
 def log(message, level=xbmc.LOGINFO):
@@ -57,6 +61,15 @@ def configured_location(index):
 def publish(props):
     for key, value in props.items():
         WEATHER_WINDOW.setProperty(key, value)
+
+
+def publish_unavailable(name):
+    # A failure streak keeps the time of its first failed refresh; a successful refresh clears it.
+    message = WEATHER_WINDOW.getProperty('Unavailable')
+    if not message:
+        template = LANGUAGE(STR_UNAVAILABLE) or UNAVAILABLE_FALLBACK
+        message = template % formatter().clock(datetime.now(timezone.utc))
+    publish(eccc.unavailable_properties(name, message))
 
 
 def kodi_setting(name):
@@ -95,7 +108,7 @@ def refresh(index):
         except Exception as error:  # network/HTTP/JSON failures all mean "no data this round"
             log('fetch %s failed (attempt %d): %r' % (site_id, attempt, error), xbmc.LOGWARNING)
             if attempt == FETCH_ATTEMPTS or monitor.waitForAbort(RETRY_SECONDS):
-                publish(eccc.blank_properties())
+                publish_unavailable(name)
                 return
     lon, lat = feature['geometry']['coordinates'][:2]
     try:

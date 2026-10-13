@@ -74,6 +74,7 @@ Besides Kodi's standard weather properties, the add-on sets these on the Weather
 | `Current.Station` | `Open-Meteo model at Markham`, or the ECCC station name |
 | `Current.ObservationTime` | `6:30 PM` |
 | `Alerts` | `Yellow Advisory - Frost`: active ECCC alerts joined with ` · `; empty when none |
+| `Unavailable` | `Weather unavailable since 3:55 PM`: set when a refresh fails (the readings are then blank), with the time of the first failure in a row; empty after the next successful refresh |
 | `Daily.N.Summary` | ECCC's full forecast text for that day and night |
 
 The background service refreshes these properties every 15 minutes. Kodi's own `Weather.*` labels keep

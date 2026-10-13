@@ -19,14 +19,46 @@
 			<top>30</top>
 			<width>840</width>
 			<height>350</height>
-			<visible>Weather.IsFetched + !SlideShow.IsVideo</visible>
+			<visible>[Weather.IsFetched | !String.IsEmpty(Window(weather).Property(Unavailable))] + !SlideShow.IsVideo</visible>
+			<!-- the add-on's last refresh failed: a compact panel saying since when, instead of empty readings -->
+			<control type="image">
+				<left>0</left>
+				<top>0</top>
+				<width>840</width>
+				<height>135</height>
+				<texture border="40" colordiffuse="B3000000">kodi-weather-panel.png</texture>
+				<visible>!String.IsEmpty(Window(weather).Property(Unavailable))</visible>
+			</control>
+			<control type="label">
+				<left>30</left>
+				<top>15</top>
+				<width>780</width>
+				<height>60</height>
+				<aligny>center</aligny>
+				<font>font37</font>
+				<textcolor>white</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<label>$INFO[Window(weather).Property(Unavailable)]</label>
+			</control>
+			<control type="label">
+				<left>30</left>
+				<top>70</top>
+				<width>780</width>
+				<height>50</height>
+				<aligny>center</aligny>
+				<font>font27</font>
+				<textcolor>FFBBBBBB</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<label>$INFO[Window(weather).Property(Location)]</label>
+				<visible>!String.IsEmpty(Window(weather).Property(Unavailable))</visible>
+			</control>
 			<control type="image">
 				<left>0</left>
 				<top>0</top>
 				<width>840</width>
 				<height>295</height>
 				<texture border="40" colordiffuse="B3000000">kodi-weather-panel.png</texture>
-				<visible>String.IsEmpty(Window(weather).Property(Alerts))</visible>
+				<visible>String.IsEmpty(Window(weather).Property(Alerts)) + String.IsEmpty(Window(weather).Property(Unavailable))</visible>
 			</control>
 			<control type="image">
 				<left>0</left>
@@ -34,7 +66,7 @@
 				<width>840</width>
 				<height>345</height>
 				<texture border="40" colordiffuse="B3000000">kodi-weather-panel.png</texture>
-				<visible>!String.IsEmpty(Window(weather).Property(Alerts))</visible>
+				<visible>!String.IsEmpty(Window(weather).Property(Alerts)) + String.IsEmpty(Window(weather).Property(Unavailable))</visible>
 			</control>
 			<!-- now: icon + temperature -->
 			<control type="image">
@@ -179,6 +211,7 @@
 				<textcolor>FFBBBBBB</textcolor>
 				<shadowcolor>black</shadowcolor>
 				<label>$INFO[Window(weather).Property(Location)]</label>
+				<visible>String.IsEmpty(Window(weather).Property(Unavailable))</visible>
 			</control>
 			<control type="label">
 				<left>20</left>

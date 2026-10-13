@@ -8,6 +8,8 @@ the slideshow:
 - temperatures 1, 4 and 8 hours ahead
 - the selected location, e.g. `Markham, ON`
 - active weather alerts, in orange
+- when the add-on can't fetch the weather, a short panel saying since when, e.g.
+  `Weather unavailable since 3:55 PM`
 
 It needs the `weather.environmentcanada` add-on set as Kodi's weather service. With another weather
 add-on, the big temperature and the alert line stay empty.

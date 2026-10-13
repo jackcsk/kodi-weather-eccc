@@ -142,5 +142,19 @@ class Slots(unittest.TestCase):
         self.assertEqual('', props['Daily.3.HighTemperature'])
 
 
+class FailedRefresh(unittest.TestCase):
+    def test_failure_blanks_readings_and_recovery_clears_message(self):
+        # Kodi window properties persist between refreshes; publishing only sets the keys given.
+        window = {}
+        city = fixture('markham-on-85.json')
+        window.update(eccc.build_properties(city, 'Markham, ON', formatter(), NOW))
+        window.update(eccc.unavailable_properties('Markham, ON', 'Weather unavailable since 5:55 PM'))
+        self.assertEqual(('', '', '', 'Markham, ON', 'Weather unavailable since 5:55 PM'),
+                         (window['Current.TemperatureLabel'], window['Hourly.1.Time'], window['Alerts'],
+                          window['Location'], window['Unavailable']))
+        window.update(eccc.build_properties(city, 'Markham, ON', formatter(), NOW))
+        self.assertEqual(('19.4°C', ''), (window['Current.TemperatureLabel'], window['Unavailable']))
+
+
 if __name__ == '__main__':
     unittest.main()

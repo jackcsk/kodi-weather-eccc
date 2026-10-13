@@ -62,7 +62,7 @@ CURRENT_KEYS = (
     'Current.DewPoint', 'Current.Humidity', 'Current.Wind', 'Current.WindDirection', 'Current.WindGust',
     'Current.Pressure', 'Current.Precipitation', 'Current.UVIndex', 'Current.OutlookIcon',
     'Current.FanartCode', 'Current.Station', 'Current.ObservationTime', 'Current.IsFetched', 'Alerts',
-    'Current.TemperatureLabel',
+    'Current.TemperatureLabel', 'Unavailable',
     'Today.Sunrise', 'Today.Sunset', 'Today.IsFetched',
     'Forecast.City', 'Forecast.Country', 'Forecast.Updated', 'Forecast.IsFetched',
     'Hourly.IsFetched', 'Daily.IsFetched', 'WeatherProvider', 'WeatherProviderLogo',
@@ -368,6 +368,14 @@ def blank_properties():
         props.update(('Daily.%d.%s' % (i, field), '') for field in DAILY_FIELDS)
     for i in range(DAY_SLOTS):
         props.update(('Day%d.%s' % (i, field), '') for field in DAY_FIELDS)
+    return props
+
+
+def unavailable_properties(location_name, message):
+    """Property set after a failed refresh: no readings, just the location and the reason for skins to show."""
+    props = blank_properties()
+    props['Location'] = location_name
+    props['Unavailable'] = message
     return props
 
 

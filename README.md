@@ -77,6 +77,9 @@ Besides Kodi's standard weather properties, the add-on sets these on the Weather
 | `Unavailable` | `Weather unavailable since 3:55 PM`: set when a refresh fails (the readings are then blank), with the time of the first failure in a row; empty after the next successful refresh |
 | `Daily.N.Summary` | ECCC's full forecast text for that day and night |
 
+Special weather statements use the headline from the matching ECCC alert when available, for example
+`Brief freezing rain possible late Thursday.` Otherwise the city page title is shown.
+
 The background service refreshes these properties every 15 minutes. Kodi's own `Weather.*` labels keep
 Kodi's 30-minute cycle.
 

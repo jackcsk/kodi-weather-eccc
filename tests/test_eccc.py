@@ -4,6 +4,7 @@ import os
 import sys
 import unittest
 from datetime import datetime, timezone
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -96,6 +97,24 @@ class CurrentConditions(unittest.TestCase):
         self.assertEqual('Yellow Advisory - Frost', eccc.build_properties(city, 'M', formatter(), NOW)['Alerts'])
         after = datetime(2026, 10, 10, 13, 0, tzinfo=timezone.utc)
         self.assertEqual('', eccc.build_properties(city, 'M', formatter(), after)['Alerts'])
+
+    def test_special_weather_statement_uses_only_its_own_headline(self):
+        alert_id = '1506321101890631082202611250503'
+        warning = {'description': {'en': 'SPECIAL WEATHER STATEMENT'},
+                   'url': {'en': 'https://weather.gc.ca/warnings/report_e.html?onrm58#' + alert_id}}
+        city = {'warnings': [warning]}
+        headline = 'Brief freezing rain possible late Thursday.'
+        details = {'properties': {'alert_text_en': headline + '\n\nWhat:\nLocally icy conditions.'}}
+        for response, expected in (
+            ({'features': [{'id': alert_id + '_fea1-1190', **details}]}, headline),
+            ({'features': [{'id': '999_fea1-1190', **details}]}, 'Special Weather Statement'),
+            ({'features': []}, 'Special Weather Statement'),
+            (TimeoutError(), 'Special Weather Statement'),
+        ):
+            with self.subTest(response=response):
+                with patch.object(eccc, 'fetch_json', side_effect=[{'properties': city}, response]):
+                    fetched = eccc.fetch_city('on-85')['properties']
+                self.assertEqual(expected, eccc.build_properties(fetched, 'M', formatter(), NOW)['Alerts'])
 
     def test_fresh_nowcast_replaces_distant_station_observation(self):
         city = fixture('markham-on-85.json')

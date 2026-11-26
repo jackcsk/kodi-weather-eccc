@@ -9,8 +9,10 @@ import re
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
+from http.client import HTTPException
 
 API_URL = 'https://api.weather.gc.ca/collections/citypageweather-realtime/items'
+ALERTS_URL = 'https://api.weather.gc.ca/collections/weather-alerts/items'
 GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search'
 NOWCAST_URL = 'https://api.open-meteo.com/v1/forecast'
 USER_AGENT = 'weather.environmentcanada/1.0 (Kodi weather add-on)'
@@ -84,18 +86,43 @@ POP_RE = re.compile(r'(\d+) percent chance of')
 
 # ---------------------------------------------------------------- network
 
-def fetch_json(url, params=None):
+def fetch_json(url, params=None, *, timeout=TIMEOUT):
     if params:
         url = '%s?%s' % (url, urllib.parse.urlencode(params))
     request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT, 'Accept': 'application/json'})
-    with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+    with urllib.request.urlopen(request, timeout=timeout) as response:
         return json.load(response)
 
 
 def fetch_city(site_id):
     """City page feature (GeoJSON: 'properties', 'geometry') for an ECCC site id such as 'on-85'."""
     url = '%s/%s' % (API_URL, urllib.parse.quote(site_id))
-    return fetch_json(url, {'f': 'json', 'lang': 'en'})
+    feature = fetch_json(url, {'f': 'json', 'lang': 'en'})
+    now = datetime.now(timezone.utc)
+    for warning in lookup(feature, 'properties', 'warnings') or []:
+        if text(warning, 'description').upper() != 'SPECIAL WEATHER STATEMENT':
+            continue
+        expires = parse_time(text(warning, 'expiryTime'))
+        if expires is None or expires > now:
+            warning['headline'] = _statement_headline(warning)
+    return feature
+
+
+def _statement_headline(warning):
+    # The city page URL fragment is the CAP alert ID. GeoMet appends a region suffix.
+    alert_id = text(warning, 'url').rpartition('#')[2]
+    if not re.fullmatch(r'[0-9]+', alert_id):
+        return ''
+    prefix = alert_id + '_'
+    try:
+        data = fetch_json(ALERTS_URL, {'f': 'json', 'limit': 1, 'filter': "id LIKE '%s%%'" % prefix},
+                          timeout=5)
+    except (OSError, ValueError, HTTPException):
+        return ''  # Keep the city page title if optional details are unavailable.
+    alert = lookup(data, 'features', 0)
+    if not text(alert, 'id').startswith(prefix):
+        return ''
+    return text(alert, 'properties', 'alert_text_en').strip().partition('\n')[0].strip()
 
 
 def fetch_nowcast(lat, lon):
@@ -407,7 +434,7 @@ def active_alerts(city, now):
     titles = []
     for warning in city.get('warnings') or []:
         expires = parse_time(text(warning, 'expiryTime'))
-        title = text(warning, 'description').title()
+        title = text(warning, 'headline') or text(warning, 'description').title()
         if title and (expires is None or expires > now) and title not in titles:
             titles.append(title)
     return ' · '.join(titles)
